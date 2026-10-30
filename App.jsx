@@ -1,100 +1,9 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Line, Text } from '@react-three/drei';
 import { evaluate } from 'mathjs';
 import * as THREE from 'three';
-
-// Background particles
-const InteractiveBackground = () => {
-  const canvasRef = useRef(null);
-  
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    let width = window.innerWidth;
-    let height = window.innerHeight;
-    let particles = [];
-    let mouse = { x: null, y: null };
-
-    class Particle {
-      constructor() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.size = Math.random() * 2 + 1;
-        this.speedX = Math.random() * 0.4 - 0.2;
-        this.speedY = Math.random() * 0.4 - 0.2;
-        this.color = `rgba(255,255,255,${Math.random() * 0.1 + 0.1})`;
-      }
-      
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        if (this.x > width || this.x < 0) this.speedX = -this.speedX;
-        if (this.y > height || this.y < 0) this.speedY = -this.speedY;
-        
-        if (mouse.x) {
-          const dx = mouse.x - this.x, dy = mouse.y - this.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 100) {
-            const angle = Math.atan2(dy, dx);
-            this.speedX -= Math.cos(angle) * 0.2;
-            this.speedY -= Math.sin(angle) * 0.2;
-          }
-        }
-      }
-      
-      draw() {
-        ctx.fillStyle = this.color;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-        
-        particles.forEach(p => {
-          const dx = this.x - p.x, dy = this.y - p.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 150) {
-            ctx.strokeStyle = `rgba(255,255,255,${0.1 - dist/1500})`;
-            ctx.lineWidth = 0.5;
-            ctx.beginPath();
-            ctx.moveTo(this.x, this.y);
-            ctx.lineTo(p.x, p.y);
-            ctx.stroke();
-          }
-        });
-      }
-    }
-
-    const init = () => {
-      particles = Array.from({ length: Math.min(width, height) * 0.08 }, () => new Particle());
-    };
-
-    const animate = () => {
-      ctx.clearRect(0, 0, width, height);
-      particles.forEach(p => { p.update(); p.draw(); });
-      requestAnimationFrame(animate);
-    };
-
-    const resize = () => {
-      width = Math.min(window.innerWidth * 0.9, 1000); // 90% width, max 1000px
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-      init();
-    };
-
-    resize();
-    window.addEventListener('resize', resize);
-    window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-    animate();
-
-    return () => window.removeEventListener('resize', resize);
-  }, []);
-
-  return <canvas ref={canvasRef} style={{
-    position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1,
-    background: 'linear-gradient(135deg, #1e1b2e 0%, #2a2541 50%, #3d3a5c 100%)'
-  }} />;
-};
+import './App.css';
 
 // Solution steps
 const SolvingSteps = ({ topFunction, bottomFunction, a, b, shape, totalVolume }) => {
@@ -131,33 +40,17 @@ const SolvingSteps = ({ topFunction, bottomFunction, a, b, shape, totalVolume })
   ];
 
   return (
-    <div style={{
-      background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', borderRadius: '30px',
-      padding: '30px', border: '1px solid rgba(255,255,255,0.2)', color: 'white',
-      width: '94vw', fontSize: '18px', fontFamily: 'Georgia, serif'
-    }}>
-      <h2 style={{ margin: '0 0 25px 0', fontSize: '28px', textAlign: 'center' }}>Solution Steps</h2>
+    <section className="solution-panel" id="solution-steps">
+      <div className="section-heading"><div><p className="eyebrow">THE METHOD</p><h2>One step at a time.</h2></div><span className="muted">From the region to the integral</span></div>
       {steps.map((step, i) => (
-        <div key={i} style={{ background: 'rgba(255,255,255,0.1)', borderRadius: '16px', margin: '14px 0' }}>
-          <button onClick={() => setExpanded(expanded === i ? null : i)} style={{
-            width: '100%', padding: '20px 24px', background: 'transparent', border: 'none',
-            color: 'white', fontSize: '20px', textAlign: 'left', cursor: 'pointer',
-            display: 'flex', justifyContent: 'space-between'
-          }}>
-            <span>{i + 1}. {step.title}</span>
-            <span style={{ transform: `rotate(${expanded === i ? 180 : 0}deg)`, transition: 'transform 0.3s' }}>▼</span>
+        <div className="solution-step" key={i}>
+          <button aria-expanded={expanded === i} aria-controls={`step-${i}`} onClick={() => setExpanded(expanded === i ? null : i)}>
+            <span><span className="step-number">0{i + 1}</span>{step.title}</span><span aria-hidden="true">{expanded === i ? '\u2212' : '+'}</span>
           </button>
-          {expanded === i && (
-            <div style={{
-              padding: '0 24px 20px', fontSize: '17px', borderTop: '1px solid rgba(255,255,255,0.15)',
-              whiteSpace: 'pre-wrap'
-            }}>
-              {step.content}
-            </div>
-          )}
+          {expanded === i && <div className="step-content" id={`step-${i}`}>{step.content}</div>}
         </div>
       ))}
-    </div>
+    </section>
   );
 };
 
@@ -191,7 +84,7 @@ function FunctionGraph({ expression, start, end, color, showArea, bottomExpressi
     for (let i = 0; i <= 300; i++) {
       const x = start + (i / 300) * (end - start);
       let y = 0;
-      try { y = Math.max(0, evaluate(expr, { x }) || 0); } catch {}
+      try { y = Math.max(0, evaluate(expr, { x }) || 0); } catch { /* Keep the visualization responsive while an expression is being edited. */ }
       pts.push([x, y, 0]);
     }
     return pts;
@@ -206,7 +99,7 @@ function FunctionGraph({ expression, start, end, color, showArea, bottomExpressi
     for (let i = 0; i <= 100; i++) {
       const x = start + (i / 100) * (end - start);
       let top = 0, bottom = 0;
-      try { top = Math.max(0, evaluate(topExpr, { x }) || 0); bottom = Math.max(0, evaluate(bottomExpr, { x }) || 0); } catch {}
+      try { top = Math.max(0, evaluate(topExpr, { x }) || 0); bottom = Math.max(0, evaluate(bottomExpr, { x }) || 0); } catch { /* Keep the visualization responsive while an expression is being edited. */ }
       topPts.push([x, top, 0.002]);
       bottomPts.push([x, bottom, 0.002]);
     }
@@ -249,7 +142,7 @@ function CrossSectionSolid({ topFunction, bottomFunction, start, end, crossSecti
         if (h < 0.01 || h > 10) continue;
         
         const mat = new THREE.MeshStandardMaterial({
-          color: new THREE.Color().setHSL((i / numCrossSections) * 0.8 + 0.1, 0.8, 0.6),
+          color: new THREE.Color().setHSL(0.43 + (i / numCrossSections) * 0.12, 0.42, 0.51),
           transparent: true, opacity: 0.85, side: THREE.DoubleSide
         });
         
@@ -302,13 +195,15 @@ function CrossSectionSolid({ topFunction, bottomFunction, start, end, crossSecti
         }
         
         if (mesh) sections.push(<primitive key={i} object={mesh} />);
-      } catch {}
+      } catch { /* Keep the visualization responsive while an expression is being edited. */ }
     }
     return sections;
   }, [topFunction, bottomFunction, start, end, crossSectionShape, numCrossSections]);
 
   return <>{meshes}</>;
 }
+const SHAPE_FACTORS = { square: 1, semicircle: Math.PI / 2, equilateral: Math.sqrt(3) / 4 };
+
 // Main component
 export default function App() {
   const [topFunction, setTopFunction] = useState('2*x');
@@ -322,7 +217,6 @@ export default function App() {
   const [showSteps, setShowSteps] = useState(false);
   const [ranges, setRanges] = useState({ x: [0, 2], y: [0, 3], z: [0, 2] });
 
-  const SHAPE_FACTORS = { square: 1, semicircle: Math.PI / 2, equilateral: Math.sqrt(3) / 4 };
 
   useEffect(() => {
     const xMax = Math.max(b, 1.5) + 0.5;
@@ -339,7 +233,7 @@ export default function App() {
         if (!isNaN(top) && !isNaN(bottom) && top >= 0 && bottom >= 0) {
           maxHeight = Math.max(maxHeight, top, bottom);
         }
-      } catch {}
+      } catch { /* Keep the visualization responsive while an expression is being edited. */ }
     }
     
     setRanges({
@@ -365,127 +259,53 @@ export default function App() {
         if (bottom < 0) bottom = 0;
         
         volume += shapeFactor * Math.pow(Math.abs(top - bottom), 2) * dx;
-      } catch {}
+      } catch { /* Keep the visualization responsive while an expression is being edited. */ }
     }
     
     setTotalVolume(volume.toFixed(4));
   }, [topFunction, bottomFunction, a, b, shape, numCrossSections]);
 
-  const isMobile = window.innerWidth <= 768;
-  const isTablet = window.innerWidth <= 1024;
-
-  const inputStyle = {
-    width: '90%', padding: '12px 16px 12px 12px', borderRadius: '12px',
-    border: '1px solid rgba(255,255,255,0.3)',
-    background: 'rgba(255,255,255,0.1)', color: 'white', fontSize: '14px'
-  };
-
-  const cardStyle = {
-    background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(20px)',
-    borderRadius: '20px', padding: '30px',
-    border: '1px solid rgba(255,255,255,0.2)',
-    boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
-  };
-
   return (
-    <div style={{ minHeight: '100vh', width: '100vw', position: 'relative', overflowX: 'hidden', margin: 0, padding: 0 }}>
-      <InteractiveBackground />
-      
-      <div style={{
-        textAlign:'center',
-        fontSize: '6vw',
-        fontWeight: 'bold',
-      }}> VOLUMIZE </div>
-
-      <div style={{ 
-        position: 'relative', zIndex: 1, width: '100%', minHeight: '100vh',
-        padding: isMobile ? '10px' : '20px',
-        display: 'flex', flexDirection: isTablet ? 'column' : 'row',
-        gap: '20px', boxSizing: 'border-box', maxWidth: '100vw'
-      }}>
-       
-        <div style={{
-          ...cardStyle, width: isTablet ? '100%' : '380px',
-          height: 'fit-content', color: 'white', flexShrink: 0
-        }}>
-          <h1 style={{ 
-            margin: '0 0 25px 0', fontSize: isMobile ? '20px' : '24px', fontWeight: '700', textAlign: 'center',
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'
-          }}>Volume by Cross-Sectional Areas</h1>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div>
-              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', }}>Top Function: y =</label>
-              <input type="text" value={topFunction} onChange={e => setTopFunction(e.target.value)} placeholder="e.g., 2*x, x^2" style={inputStyle} />
-            </div>
-            
-            <div>
-              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600' }}>Bottom Function: y =</label>
-              <input type="text" value={bottomFunction} onChange={e => setBottomFunction(e.target.value)} placeholder="e.g., 0, x" style={inputStyle} />
-            </div>
-            
-            <div style={{ display: 'flex', gap: '15px' }}>
-              <div style={{ flex: 1 }}>
-                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600' }}>From x =</label>
-                <input type="number" value={a} onChange={e => setA(parseFloat(e.target.value) || 0)} step="0.1" style={inputStyle} />
-              </div>
-              <div style={{ flex: 1 }}>
-                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600' }}>To x =</label>
-                <input type="number" value={b} onChange={e => setB(parseFloat(e.target.value) || 1)} step="0.1" style={inputStyle} />
-              </div>
-            </div>
-            
-            <div>
-              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600' }}>Cross-Section Shape</label>
-              <select value={shape} onChange={e => setShape(e.target.value)} style={{ ...inputStyle, cursor: 'pointer' }}>
-                <option value="square">Square</option>
-                <option value="semicircle">Semicircle</option>
-                <option value="equilateral">Equilateral Triangle</option>
-              </select>
-            </div>
-            
-            <div>
-              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600' }}>Cross-Sections: {numCrossSections}</label>
-              <input type="range" min="10" max="100" value={numCrossSections} onChange={e => setNumCrossSections(parseInt(e.target.value))} style={{ width: '100%', cursor: 'pointer' }} />
-            </div>
-            
-            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-              <input type="checkbox" id="showArea" checked={showAreaLines} onChange={e => setShowAreaLines(e.target.checked)} style={{ cursor: 'pointer' }} />
-              <label htmlFor="showArea" style={{ cursor: 'pointer', fontSize: '14px' }}>Show filled area</label>
-            </div>
-            
-            {totalVolume && (
-              <div style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', padding: '20px', borderRadius: '15px', textAlign: 'center' }}>
-                <h3 style={{ margin: '0 0 10px 0', fontSize: '18px' }}>Volume</h3>
-                <p style={{ margin: '0', fontSize: '24px', fontWeight: '700' }}>{totalVolume} cubic units</p>
-              </div>
-            )}
-            
-            <button onClick={() => setShowSteps(!showSteps)} style={{
-              width: '100%', padding: '15px', borderRadius: '12px', border: 'none',
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              color: 'white', fontSize: '16px', fontWeight: '600', cursor: 'pointer'
-            }}>
-              {showSteps ? 'Hide' : 'Show'} Solution Steps
-            </button>
+    <div className="app-shell">
+      <header className="site-header">
+        <a className="brand" href="#"><span className="brand-mark" aria-hidden="true">&#8747;</span>volumize<span className="brand-dot">.</span></a>
+        <nav aria-label="Main navigation"><a href="#explore">Workspace</a><a href="#about">The idea</a><a className="nav-cta" href="#explore">Explore in 3D <span aria-hidden="true">&#8599;</span></a></nav>
+      </header>
+      <main>
+        <section className="hero">
+          <div className="hero-copy">
+            <p className="eyebrow"><span className="small-square" /> THE CROSS-SECTION LAB</p>
+            <h1>A little calculus.<br /><em>A whole new dimension.</em></h1>
+            <p className="hero-description">Build a solid from the space between two curves. Change a slice, shift your perspective, and see the math take shape.</p>
           </div>
-        </div>
-
-        <div style={{
-          ...cardStyle, flex: 1, width: isTablet ? '100%' : 'calc(100% - 400px)',
-          height: isTablet ? '500px' : '80vh', minHeight: '400px', position: 'relative'
-        }}>
-          <div style={{ 
-            position: 'absolute', top: '20px', left: '20px', zIndex: 10,
-            background: 'rgba(0,0,0,0.7)', padding: '10px 15px', borderRadius: '8px',
-            color: 'white', fontSize: '12px'
-          }}>
-            <div>Top: y = {topFunction}</div>
-            <div>Bottom: y = {bottomFunction}</div>
-            <div>Shape: {shape}</div>
-          </div>
-          
+          <aside className="formula-card" aria-label="The principle of volume by cross sections">
+            <p className="eyebrow">THE IDEA IS SIMPLE</p>
+            <div className="hero-formula">V = &#8747;<sub>a</sub><sup>b</sup> A(x) dx</div>
+            <p>Small slices. A bigger understanding.</p>
+          </aside>
+        </section>
+        <section className="explorer" id="explore" aria-labelledby="explore-title">
+          <div className="section-heading"><div><p className="eyebrow">YOUR WORKSPACE</p><h2 id="explore-title">Make it take shape.</h2></div><span className="workspace-note"><span /> Live ? updates as you explore</span></div>
+          <div className="workspace">
+            <aside className="controls-panel">
+              <div className="panel-title"><span className="eyebrow">THE PARAMETERS</span><h3>Define your solid</h3></div>
+              <div className="control-fields">
+                <label htmlFor="top-function"><span className="function-label"><i className="top-dot" />Top function</span><span>f(x)</span></label>
+                <div className="equation-input"><span>y =</span><input id="top-function" type="text" value={topFunction} onChange={e => setTopFunction(e.target.value)} placeholder="e.g., 2*x, x^2" /></div>
+                <label htmlFor="bottom-function"><span className="function-label"><i className="bottom-dot" />Bottom function</span><span>g(x)</span></label>
+                <div className="equation-input"><span>y =</span><input id="bottom-function" type="text" value={bottomFunction} onChange={e => setBottomFunction(e.target.value)} placeholder="e.g., 0, x" /></div>
+                <p className="input-hint">Use * to multiply and ^ for powers.</p>
+                <div className="bounds"><div><label htmlFor="bound-a">Lower bound <span>a</span></label><input id="bound-a" type="number" value={a} onChange={e => setA(parseFloat(e.target.value) || 0)} step="0.1" /></div><div><label htmlFor="bound-b">Upper bound <span>b</span></label><input id="bound-b" type="number" value={b} onChange={e => setB(parseFloat(e.target.value) || 1)} step="0.1" /></div></div>
+                <fieldset className="shape-field"><legend>Cross-section shape</legend><div className="shape-options">{[{ value: 'square', icon: '?', label: 'Square' }, { value: 'semicircle', icon: '?', label: 'Semicircle' }, { value: 'equilateral', icon: '?', label: 'Triangle' }].map(option => <button key={option.value} type="button" aria-pressed={shape === option.value} title={option.value === 'equilateral' ? 'Equilateral triangle' : option.label} onClick={() => setShape(option.value)}><span aria-hidden="true">{option.icon}</span>{option.label}</button>)}</div></fieldset>
+                <label className="range-label" htmlFor="sections">Cross sections <output htmlFor="sections">{numCrossSections}</output></label><input id="sections" type="range" min="10" max="100" value={numCrossSections} onChange={e => setNumCrossSections(parseInt(e.target.value))} /><div className="range-extents"><span>10 slices</span><span>100 slices</span></div>
+                <label className="checkbox-label"><input type="checkbox" id="showArea" checked={showAreaLines} onChange={e => setShowAreaLines(e.target.checked)} /> Show filled area</label>
+              </div>
+              {totalVolume && <div className="volume-result"><span className="eyebrow">APPROXIMATE VOLUME</span><p>{totalVolume} <span>units&#179;</span></p><span>Midpoint approximation ? {numCrossSections} slices</span></div>}
+              <button className="steps-toggle" aria-expanded={showSteps} aria-controls="solution-steps" onClick={() => setShowSteps(!showSteps)}>{showSteps ? 'Hide' : 'Show'} solution steps <span aria-hidden="true">{showSteps ? '\u2212' : '+'}</span></button>
+            </aside>
+            <section className="graph-panel" aria-label="Interactive three-dimensional graph">
+              <div className="graph-header"><span className="eyebrow">THE VISUALIZATION</span><span className="graph-badge">Interactive 3D</span></div>
+              <div className="graph-canvas">
           <Canvas camera={{ position: [4, 3, 4], fov: 50 }} style={{ width: '100%', height: '100%' }}>
             <ambientLight intensity={0.4} />
             <directionalLight position={[10, 10, 5]} intensity={1.5} />
@@ -504,14 +324,19 @@ export default function App() {
             
             <OrbitControls enablePan enableZoom enableRotate maxDistance={15} minDistance={2} />
           </Canvas>
-        </div>
-      </div>
-      
-      {showSteps && (
-        <div style={{ position: 'relative', zIndex: 1, width: '100%', padding: isMobile ? '10px' : '20px', paddingTop: '0' }}>
-          <SolvingSteps topFunction={topFunction} bottomFunction={bottomFunction} a={a} b={b} shape={shape} totalVolume={totalVolume} />
-        </div>
-      )}
+              </div>
+              <div className="graph-legend"><span><i className="top-dot" />y = {topFunction}</span><span><i className="bottom-dot" />y = {bottomFunction}</span><span className="shape-name">{shape === 'equilateral' ? 'Equilateral triangle' : shape} sections</span></div>
+              <div className="graph-help"><span><b aria-hidden="true">?</b> Drag to rotate</span><span><b aria-hidden="true">?</b> Scroll to zoom</span><span><b aria-hidden="true">?</b> Right-drag to pan</span></div>
+            </section>
+          </div>
+          {showSteps && <SolvingSteps topFunction={topFunction} bottomFunction={bottomFunction} a={a} b={b} shape={shape} totalVolume={totalVolume} />}
+        </section>
+        <section className="about-section" id="about">
+          <div className="about-intro"><p className="eyebrow">THE IDEA BEHIND VOLUMIZE</p><h2>Calculus makes more sense<br />when you can see it.</h2><p>Created as an AP Calculus final project, Volumize helps other students connect the integral on the page to the solid it represents. It is a space to experiment, build intuition, and make cross-sectional volume a little less abstract.</p></div>
+          <div className="how-to"><p className="eyebrow">YOUR FIRST EXPLORATION</p><ol><li><span>01</span><div><h3>Define a region</h3><p>Enter two functions and choose your interval along the x-axis.</p></div></li><li><span>02</span><div><h3>Build it in slices</h3><p>Choose a cross-section shape and adjust the number of slices to explore the solid.</p></div></li><li><span>03</span><div><h3>Connect it to calculus</h3><p>Rotate the graph, inspect the volume, and open the solution steps to follow the method.</p></div></li></ol></div>
+        </section>
+      </main>
+      <footer><a className="brand" href="#">volumize.</a><span>An AP Calculus project &middot; Made for curious minds.</span><a href="#explore">Back to exploring &#8593;</a></footer>
     </div>
   );
 }

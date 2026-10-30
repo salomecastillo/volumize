@@ -1,430 +1,728 @@
-/* App.css - Updated for Volumize with Interactive Background */
-
-/* Base styling for full-page interactive background */
-html, body, #root {
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  width: 100%;
-  overflow-x: hidden;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+.app-shell {
+  max-width:1512px;
+  margin:auto;
+  padding:0 52px
 }
-
-/* App container for full-page styling with particle background */
-.app-container {
-  min-height: 100vh;
-  width: 100%;
-  position: relative;
-  color: white;
+.site-header {
+  height:88px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid #292f2d
 }
-
-/* Content wrapper - ensures content sits on top of particle background */
-.content-wrapper {
-  position: relative;
-  z-index: 10;
-  width: 100%;
-  min-height: 100vh;
-  padding-bottom: 50px; /* Extra padding at bottom for scrolling content */
+.brand {
+  font-size:26px;
+  letter-spacing:-1px;
+  font-weight:750;
+  display:inline-flex;
+  align-items:center
 }
-
-/* Header style for the Volumize title */
-.header {
-  text-align: left;
-  color: white;
-  margin: 5vw;
-  padding-top: 5vh;
-  font-family: monospace;
-  font-size: 2.5vw;
+.brand-mark {
+  display:inline-grid;
+  place-items:center;
+  color:#b5e9d4;
+  width:29px;
+  height:34px;
+  margin-right:10px;
+  font:600 36px Georgia,serif;
+  transform:rotate(12deg)
 }
-
-.header h1 {
-  margin: 0;
-  padding: 0;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  letter-spacing: 2px;
-  font-weight: 800;
+.brand-dot {
+  color:#b5e9d4
 }
-
-.description-text {
-  margin: 5vw;
-  color: white;
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-  font-size: 1.5vw;
-  width: 50%;
-  text-align: justify;
+.site-header nav {
+  display:flex;
+  align-items:center;
+  gap:32px;
+  font-size:14px;
+  color:#a7afab
 }
-
-.description-text p {
-  margin: 0;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-  line-height: 1.6;
+.site-header nav a:hover,footer a:hover {
+  color:#c6f3df
 }
-
-/* About section styling */
-.about {
-  display: flex;
-  flex-direction: column;
-  margin: 0 5vw;
+.nav-cta {
+  border:1px solid #3c4842;
+  border-radius:6px;
+  padding:9px 14px;
+  color:#d0e5db
 }
-
-.about-header {
-  color: white;
-  text-align: center;
-  font-family: monospace;
-  font-size: 2vw;
-  margin-bottom: 20px;
+.nav-cta span {
+  margin-left:20px
 }
-
-.about-header h2 {
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  letter-spacing: 1px;
+.hero {
+  padding:49px 0 43px;
+  display:grid;
+  grid-template-columns:1.6fr 1fr;
+  gap:50px;
+  align-items:center
 }
-
-.about-boxes {
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  margin: 3vw 0;
-  gap: 2vw;
+.eyebrow {
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:1.9px;
+  color:#91a39a;
+  display:block
 }
-
-.box {
-  background-color: rgba(58, 55, 78, 0.8); /* Semi-transparent for particle visibility */
-  border-radius: 12px;
-  padding: 2vw;
-  width: 20vw;
-  min-width: 250px;
-  color: white;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-  backdrop-filter: blur(5px); /* Creates a frosted glass effect */
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.small-square {
+  display:inline-block;
+  width:5px;
+  height:5px;
+  background:#b5e9d4;
+  margin-right:7px;
+  vertical-align:2px
 }
-
-.box:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+.hero h1 {
+  font-weight:650;
+  font-size:clamp(36px,3.6vw,52px);
+  line-height:1.17;
+  letter-spacing:-1.8px;
+  margin:17px 0
 }
-
-.box h3 {
-  font-weight: 700;
-  font-size: 1.4vw;
-  margin-bottom: 1vw;
-  font-family: monospace;
-  color: #4CAF50;
+.hero h1 em {
+  color:#b5e9d4;
+  font-family:Georgia,serif;
+  font-weight:600
 }
-
-.box p {
-  font-size: 1vw;
-  line-height: 1.4;
+.hero-description {
+  font-size:15px;
+  line-height:1.85;
+  color:#9ca6a1;
+  max-width:470px
 }
-
-/* Main calculator layout */
-.calculator-container {
-  display: flex;
-  gap: 20px;
-  margin: 30px 5vw 50px;
+.formula-card {
+  justify-self:end;
+  border-left:1px solid #343d38;
+  padding:12px 0 12px 40px;
+  margin-right:22px
 }
-
-/* Input section styling - with semi-transparent background */
-.input-section {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  background-color: rgba(51, 48, 70, 0.85); /* Semi-transparent for particle visibility */
-  border-radius: 15px;
-  padding: 30px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(5px); /* Creates a frosted glass effect */
+.formula-card .eyebrow {
+  font-size:10px
 }
-
-.input-section h2 {
-  font-size: 32px;
-  font-weight: bold;
-  color: white;
-  margin-top: 0;
-  margin-bottom: 20px;
-  font-family: monospace;
-  text-align: center;
-  letter-spacing: 1px;
+.hero-formula {
+  font:italic 600 37px Georgia,serif;
+  color:#d3dbd6;
+  padding:15px 0
 }
-
-.input-section label {
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 5px;
-  display: block;
-  color: white;
+.hero-formula sub,.hero-formula sup {
+  font-size:15px;
+  position:relative
 }
-
-.input-section input[type="text"],
-.input-section input[type="number"],
-.input-section select {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: none;
-  background-color: #f5f5f5;
-  font-size: 14px;
-  box-sizing: border-box;
-  color: #333;
-  transition: all 0.3s ease;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+.hero-formula sub {
+  left:5px
 }
-
-.input-section input[type="text"]:focus,
-.input-section input[type="number"]:focus,
-.input-section select:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.5);
+.hero-formula sup {
+  left:-5px
 }
-
-/* Toggle switch styling */
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
-  margin-left: 10px;
-  vertical-align: middle;
+.formula-card>p:last-child {
+  font-size:13px;
+  color:#7e8a83
 }
-
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
+.explorer {
+  padding-top:25px;
+  border-top:1px solid #292f2d
 }
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  transition: .4s;
-  border-radius: 34px;
+.section-heading {
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  margin-bottom:21px;
+  gap:20px
 }
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  transition: .4s;
-  border-radius: 50%;
+.section-heading h2 {
+  font-size:26px;
+  font-weight:650;
+  letter-spacing:-.8px;
+  margin-top:7px
 }
-
-input:checked + .slider {
-  background-color: #4CAF50;
+.workspace-note {
+  font-size:12px;
+  color:#9caaa2;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding-bottom:4px
 }
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #4CAF50;
+.workspace-note>span {
+  height:5px;
+  width:5px;
+  border-radius:50%;
+  background:#a6dfc5;
+  box-shadow:0 0 0 4px #a6dfc50a
 }
-
-input:checked + .slider:before {
-  transform: translateX(26px);
+.workspace {
+  display:grid;
+  grid-template-columns:294px minmax(0,1fr);
+  border:1px solid #343c37;
+  border-radius:10px;
+  overflow:hidden;
+  align-items:stretch
 }
-
-/* Calculate button styling */
-.calculate-btn {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  padding: 15px;
-  text-align: center;
-  text-decoration: none;
-  font-size: 18px;
-  font-weight: bold;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-top: 20px;
-  transition: all 0.3s;
-  letter-spacing: 1px;
-  text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+.controls-panel {
+  background:#191e1b;
+  border-right:1px solid #343c37;
+  padding:23px
 }
-
-.calculate-btn:hover {
-  background-color: #3e8e41;
-  box-shadow: 0 6px 8px rgba(0,0,0,0.15);
-  transform: translateY(-2px);
+.panel-title {
+  padding-bottom:21px;
+  margin-bottom:19px;
+  border-bottom:1px solid #303832
 }
-
-.calculate-btn:active {
-  transform: translateY(1px);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.panel-title .eyebrow {
+  font-size:10px
 }
-
-/* Canvas and display section styling */
-.display-section {
-  flex: 1.5;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.panel-title h3 {
+  font-size:19px;
+  font-weight:650;
+  margin-top:7px;
+  letter-spacing:-.4px
 }
-
-.total-volume {
-  background-color: rgba(233, 233, 233, 0.9);
-  color: black;
-  border-radius: 8px;
-  padding: 20px;
-  text-align: center;
-  backdrop-filter: blur(5px); /* Creates a frosted glass effect */
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-  transition: transform 0.3s ease;
+.control-fields label {
+  font-size:13px;
+  font-weight:650;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:8px;
+  color:#c6cfca
 }
-
-.total-volume:hover {
-  transform: translateY(-3px);
+.control-fields label>span {
+  font:italic 600 15px Georgia,serif;
+  color:#84968c
 }
-
-.total-volume-title {
-  color: #333;
-  font-size: 24px;
-  font-weight: bold;
-  margin: 0;
-  font-family: monospace;
-  letter-spacing: 1px;
+.control-fields label>.function-label {
+  font:inherit;
+  color:#c6cfca;
+  display:flex;
+  align-items:center;
+  gap:7px
 }
-
+.function-label i {
+  width:5px;
+  height:5px;
+  border-radius:50%
+}
+.control-fields input[type=text],.control-fields input[type=number] {
+  width:100%;
+  height:38px;
+  border:1px solid #39433c;
+  border-radius:5px;
+  background:#131815;
+  color:#e0e8e2;
+  padding:8px 11px;
+  font-size:14px
+}
+.equation-input {
+  display:flex;
+  align-items:center;
+  border:1px solid #39433c;
+  border-radius:5px;
+  margin-bottom:16px;
+  background:#131815;
+  transition:border-color .15s
+}
+.equation-input:focus-within {
+  border-color:#a7d6bd;
+  box-shadow:0 0 0 3px #a7d6bd0b
+}
+.equation-input>span {
+  font:italic 600 17px Georgia,serif;
+  padding:0 12px;
+  color:#819288;
+  border-right:1px solid #303a33;
+  white-space:nowrap
+}
+.control-fields .equation-input input {
+  border:0;
+  background:transparent;
+  font-family:Consolas,monospace;
+  outline:none
+}
+.input-hint {
+  font-size:11px;
+  color:#8b9990;
+  margin:-6px 0 20px
+}
+.bounds {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-bottom:22px
+}
+.shape-field {
+  padding:0;
+  border:0;
+  margin:0 0 21px;
+  min-width:0
+}
+.shape-field legend {
+  font-size:13px;
+  color:#c6cfca;
+  margin-bottom:10px;
+  padding:0
+}
+.shape-options {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:6px
+}
+.shape-options button {
+  border:1px solid #354038;
+  border-radius:5px;
+  background:#151a17;
+  color:#9ba99f;
+  font-size:11px;
+  padding:8px 2px;
+  transition:background .15s,border-color .15s
+}
+.shape-options button>span {
+  display:block;
+  font-size:26px;
+  line-height:1.2;
+  margin-bottom:5px;
+  font-family:Arial,sans-serif
+}
+.shape-options button[aria-pressed=true] {
+  background:#273e32;
+  border-color:#729e83;
+  color:#ccedda
+}
+.shape-options button:hover {
+  border-color:#729e83
+}
+.range-label output {
+  color:#cae7d5;
+  font:600 13px Consolas,monospace;
+  border:1px solid #3b493f;
+  padding:1px 7px;
+  border-radius:4px
+}
+.control-fields input[type=range] {
+  width:100%;
+  accent-color:#b5e0c7;
+  margin:4px 0;
+  height:15px;
+  cursor:pointer
+}
+.range-extents {
+  display:flex;
+  justify-content:space-between;
+  font-size:11px;
+  color:#829187;
+  margin:0 0 18px
+}
+.control-fields .checkbox-label {
+  justify-content:flex-start;
+  gap:9px;
+  font-weight:600;
+  color:#a8b6ad;
+  margin-bottom:20px
+}
+.checkbox-label input {
+  accent-color:#b5e0c7;
+  margin:0;
+  width:14px;
+  height:14px
+}
 .volume-result {
-  font-size: 32px;
-  font-weight: bold;
-  color: #4CAF50;
-  margin: 10px 0 0 0;
-  text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+  padding:16px 0 13px;
+  border-top:1px solid #354139
 }
-
-/* Canvas container */
-.canvas-container {
-  background-color: rgba(233, 233, 233, 0.9);
-  border-radius: 8px;
-  height: 400px;
-  overflow: hidden;
-  position: relative;
-  backdrop-filter: blur(5px); /* Creates a frosted glass effect */
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+.volume-result .eyebrow {
+  font-size:10px;
+  letter-spacing:1.4px;
+  color:#a7c2b2
 }
-
-/* Canvas styling */
-canvas {
-  width: 100% !important;
-  height: 100% !important;
+.volume-result p {
+  font-size:39px;
+  font-weight:650;
+  letter-spacing:-1.5px;
+  color:#d5f4e2;
+  margin:5px 0
 }
-
-/* Solving steps section */
-.solving-steps {
-  color: white;
-  font-size: 24px;
-  font-weight: bold;
-  margin-top: 20px;
-  margin-bottom: 15px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-  font-family: monospace;
-  letter-spacing: 1px;
+.volume-result p span {
+  font-size:13px;
+  color:#96ad9f;
+  letter-spacing:0;
+  margin-left:5px
 }
-
-.steps-container {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+.volume-result>span:last-child {
+  font-size:11px;
+  color:#90a095
 }
-
-.step-box {
-  color: black;
-  background-color: rgba(233, 233, 233, 0.9);
-  border-radius: 8px;
-  padding: 20px;
-  min-height: 40px;
-  backdrop-filter: blur(5px); /* Creates a frosted glass effect */
-  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-  transition: transform 0.2s ease;
+.steps-toggle {
+  background:#26352c;
+  border:1px solid #405446;
+  border-radius:5px;
+  display:flex;
+  justify-content:space-between;
+  width:100%;
+  padding:11px 12px;
+  font-size:13px;
+  color:#c6dfcf;
+  margin-top:7px;
+  transition:background .15s
 }
-
-.step-box:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+.steps-toggle:hover {
+  background:#324638
 }
-
-.step-box strong {
-  color: #4CAF50;
+.graph-panel {
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  overflow:hidden;
+  background:#121715;
+  color:#d4ded8
 }
-
-.step-box p {
-  margin: 8px 0;
-  line-height: 1.5;
+.graph-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:19px 23px;
+  gap:12px
 }
-
-/* Responsive adjustments */
-@media (max-width: 1200px) {
-  .calculator-container {
-    flex-direction: column;
+.graph-header .eyebrow {
+  font-size:10px;
+  color:#8a9b90
+}
+.graph-badge {
+  font-size:11px;
+  border:1px solid #35433a;
+  border-radius:20px;
+  padding:4px 10px;
+  color:#a7bcae
+}
+.graph-canvas {
+  flex:1;
+  min-height:440px;
+  position:relative;
+  background-image:radial-gradient(#71887720 .7px,transparent .7px);
+  background-size:23px 23px
+}
+.graph-legend {
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:20px;
+  padding:17px 23px;
+  border-top:1px solid #2b3730;
+  font:600 13px Consolas,monospace;
+  overflow-wrap:anywhere
+}
+.graph-legend>span {
+  display:flex;
+  align-items:center;
+  gap:7px;
+  min-width:0
+}
+.graph-legend i {
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  flex-shrink:0
+}
+.top-dot {
+  background:#ff6b6b
+}
+.bottom-dot {
+  background:#4ecdc4
+}
+.graph-legend .shape-name {
+  margin-left:auto;
+  font:600 12px 'Segoe UI',sans-serif;
+  text-transform:capitalize;
+  color:#8c9f92
+}
+.graph-help {
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:28px;
+  padding:13px 15px;
+  background:#101512;
+  font-size:11px;
+  color:#8fa095
+}
+.graph-help b {
+  font-weight:600;
+  font-size:15px;
+  color:#b9c7be;
+  margin-right:5px
+}
+.solution-panel {
+  background:#181e1a;
+  padding:28px;
+  border:1px solid #354139;
+  border-radius:8px;
+  margin-top:20px
+}
+.muted {
+  font-size:13px;
+  color:#92a298
+}
+.solution-step {
+  border-top:1px solid #303c34
+}
+.solution-step button {
+  border:0;
+  background:transparent;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  width:100%;
+  padding:19px 0;
+  font-size:15px;
+  text-align:left;
+  gap:15px
+}
+.solution-step button:hover {
+  color:#b5e9d4
+}
+.step-number {
+  font:600 13px Consolas,monospace;
+  color:#86a492;
+  margin-right:20px
+}
+.step-content {
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  color:#a8b9ae;
+  font-size:15px;
+  line-height:1.9;
+  padding:0 32px 24px
+}
+.about-section {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:100px;
+  padding:65px 0;
+  border-bottom:1px solid #2b3530;
+  margin-top:25px
+}
+.about-section h2 {
+  font-size:31px;
+  line-height:1.3;
+  letter-spacing:-.8px;
+  font-weight:650;
+  margin:13px 0 20px
+}
+.about-intro>p:last-child {
+  font-size:14px;
+  color:#94a399;
+  line-height:1.9;
+  max-width:440px
+}
+.how-to ol {
+  list-style:none;
+  padding:0;
+  margin:21px 0 0
+}
+.how-to li {
+  display:flex;
+  gap:18px;
+  margin:0 0 22px
+}
+.how-to li>span {
+  font:600 13px Consolas,monospace;
+  color:#98b8a5;
+  padding-top:4px
+}
+.how-to h3 {
+  font-size:14px;
+  font-weight:650;
+  margin-bottom:5px
+}
+.how-to li p {
+  font-size:13px;
+  color:#94a399;
+  line-height:1.7;
+  max-width:340px
+}
+footer {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:25px 0 32px;
+  gap:18px;
+  color:#8d9b93;
+  font-size:12px
+}
+footer .brand {
+  font-size:21px;
+  color:#b8cabe
+}
+footer>a:last-child {
+  color:#adc5b7
+}
+@media(min-width:1600px) {
+  .graph-canvas {
+    min-height:510px
   }
   
-  .box {
-    width: calc(50% - 2vw);
-    min-width: auto;
-  }
 }
-
-@media (max-width: 768px) {
-  .header {
-    font-size: 5vw;
-    margin: 20px;
-    padding-top: 20px;
+@media(max-width:1050px) {
+  .app-shell {
+    padding:0 28px
+  }
+  .hero {
+    gap:30px
+  }
+  .hero h1 {
+    font-size:42px
+  }
+  .formula-card {
+    padding-left:25px;
+    margin:0
+  }
+  .workspace {
+    grid-template-columns:270px minmax(0,1fr)
+  }
+  .controls-panel {
+    padding:20px
+  }
+  .graph-header {
+    padding:18px
+  }
+  .about-section {
+    gap:45px
   }
   
-  .description-text {
-    width: 90%;
-    font-size: 16px;
-    margin: 20px;
+}
+@media(max-width:760px) {
+  .app-shell {
+    padding:0 20px
   }
-  
-  .box {
-    width: 100%;
-    min-width: auto;
-    padding: 20px;
+  .site-header {
+    height:72px
   }
-  
-  .box h3 {
-    font-size: 18px;
+  .site-header nav {
+    gap:20px;
+    font-size:13px
   }
-  
-  .box p {
-    font-size: 14px;
+  .nav-cta {
+    display:none
   }
-  
-  .input-section, .display-section {
-    padding: 15px;
+  .brand {
+    font-size:24px
   }
-  
-  .input-section h2, .total-volume-title, .solving-steps {
-    font-size: 20px;
+  .hero {
+    grid-template-columns:1fr;
+    padding:34px 0;
+    gap:26px
   }
-  
+  .hero h1 {
+    font-size:42px
+  }
+  .formula-card {
+    justify-self:stretch;
+    border-left:0;
+    border-top:1px solid #2b3530;
+    padding:20px 0 0;
+    display:grid;
+    grid-template-columns:1fr auto;
+    align-items:center;
+    gap:5px
+  }
+  .formula-card .eyebrow {
+    grid-column:1
+  }
+  .formula-card .hero-formula {
+    grid-column:2;
+    grid-row:1 / 3;
+    padding:0;
+    font-size:30px
+  }
+  .formula-card>p:last-child {
+    grid-column:1;
+    font-size:12px
+  }
+  .section-heading h2 {
+    font-size:24px
+  }
+  .workspace-note {
+    font-size:11px;
+    max-width:125px
+  }
+  .workspace {
+    grid-template-columns:1fr
+  }
+  .controls-panel {
+    border-right:0;
+    border-bottom:1px solid #343c37;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:0 22px
+  }
+  .panel-title {
+    grid-column:1 / -1
+  }
+  .control-fields {
+    grid-column:1 / -1
+  }
   .volume-result {
-    font-size: 24px;
+    grid-column:1 / -1
+  }
+  .steps-toggle {
+    grid-column:1 / -1
+  }
+  .graph-canvas {
+    height:430px;
+    flex:none;
+    min-height:0
+  }
+  .graph-header {
+    padding:18px
+  }
+  .graph-legend {
+    padding:15px;
+    gap:12px
+  }
+  .graph-help {
+    gap:15px
+  }
+  .about-section {
+    grid-template-columns:1fr;
+    padding:45px 0;
+    gap:35px
+  }
+  .about-section h2 {
+    font-size:29px
+  }
+  .solution-panel {
+    padding:20px
+  }
+  .solution-panel .section-heading {
+    align-items:start;
+    flex-direction:column;
+    gap:9px
+  }
+  .step-content {
+    padding:0 0 20px
+  }
+  footer {
+    flex-wrap:wrap
+  }
+  footer>span {
+    order:3;
+    flex-basis:100%
   }
   
-  .canvas-container {
-    height: 300px;
-  }
 }
-
-@media (max-width: 480px) {
-  .header h1 {
-    font-size: 24px;
+@media(max-width:380px) {
+  .app-shell {
+    padding:0 14px
+  }
+  .hero h1 {
+    font-size:37px
+  }
+  .formula-card .hero-formula {
+    font-size:25px
+  }
+  .workspace-note {
+    display:none
+  }
+  .graph-help {
+    gap:10px;
+    font-size:10px
   }
   
-  .calculate-btn {
-    padding: 12px;
-    font-size: 16px;
-  }
 }
